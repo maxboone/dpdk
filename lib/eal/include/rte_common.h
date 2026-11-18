@@ -548,6 +548,13 @@ static void __attribute__((destructor(RTE_PRIO(prio)), used)) func(void)
 #endif
 
 /**
+ * Compile a function with compiler- and architecture-specific target features.
+ */
+#if defined(RTE_CC_GCC) || defined(RTE_CC_CLANG)
+#define __rte_target(features) __attribute__((target(features)))
+#endif
+
+/**
  * Hint function in the hot path
  *
  * The compiler may optimize the function more aggressively,
