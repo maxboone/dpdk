@@ -8,6 +8,7 @@
 
 #include <rte_common.h>
 #include <rte_byteorder.h>
+#include <rte_cpuflags.h>
 #include <rte_debug.h>
 
 #include "bpf_impl.h"
@@ -1031,15 +1032,10 @@ emit_stxr(struct a64_jit_ctx *ctx, bool is64, uint8_t rs, uint8_t rt,
 	emit_insn(ctx, insn, check_reg(rs) || check_reg(rt) || check_reg(rn));
 }
 
-static int
+static bool
 has_atomics(void)
 {
-	int rc = 0;
-
-#if defined(__ARM_FEATURE_ATOMICS) || defined(RTE_ARM_FEATURE_ATOMICS)
-	rc = 1;
-#endif
-	return rc;
+	return rte_cpu_get_flag_enabled(RTE_CPUFLAG_ATOMICS) == 1;
 }
 
 static void
